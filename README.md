@@ -1,2 +1,1 @@
-##### V1.0
-first commit, added all basic files 
+This is the project where I write about course stadges.
