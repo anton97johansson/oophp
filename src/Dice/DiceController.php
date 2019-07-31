@@ -85,7 +85,7 @@ class DiceController implements AppInjectableInterface
         // if (!$this->app->session->get("game")->isOver()) {
         //     return $this->app->response->redirect("diceGame/over");
         // }
-        $player = $this->app->session->get("p1");
+        // $player = $this->app->session->get("p1");
         $game = $this->app->session->get("game");
         $latest = $this->app->session->get("latest", ["Nothing"]);
         $hand = $this->app->session->get("sum", "empty");
