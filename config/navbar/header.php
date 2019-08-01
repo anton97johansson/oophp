@@ -103,5 +103,10 @@ return [
             "url" => "blogg",
             "title" => "content blogg",
         ],
+        [
+            "text" => "test filter",
+            "url" => "blogg/pageTest?page=page-8",
+            "title" => "text fillter",
+        ],
     ],
 ];

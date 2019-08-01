@@ -91,6 +91,37 @@ class BloggController implements AppInjectableInterface
         return $this->app->response->redirect("blogg/page");
     }
 
+    public function pageTestAction()
+    {
+        $this->app->db->connect();
+        $pagePath = $this->app->request->getGet("page");
+        $blogg = $this->app->session->get("blogg");
+        $filter = $this->app->session->get("filter");
+        $content = $blogg->getContent($this->app, [$pagePath, "page"]);
+        if (!$content) {
+            $this->app->page->add("blogg/404");
+            $title = "404";
+            return $this->app->page->render([
+                "title" => $title,
+            ]);
+            return $this->app->response->redirect("blogg/page");
+        }
+
+        $title = $content->title;
+        $data = [
+            "content" => $content,
+            "filter" => $filter
+        ];
+        // $this->app->page->add("blogg/navbar");
+        $this->app->page->add("blogg/navbar");
+        $this->app->page->add("blogg/pageTest", $data);
+
+        return $this->app->page->render([
+            "title" => $title,
+        ]);
+        return $this->app->response->redirect("blogg/pageTest");
+    }
+
     public function pagesAction()
     {
         $title = "Pages";
@@ -167,7 +198,7 @@ class BloggController implements AppInjectableInterface
          $content = $blogg->getContentByID($this->app, [$contentId]);
          $contentTitle = $this->app->request->getPost("contentTitle");
          $contentPath  = $this->app->request->getPost("contentPath") ?: null;
-         $contentSlug = $this->app->request->getPost("contentSlug");
+         $contentSlug = $this->app->request->getPost("contentSlug") ?: null;;
          $contentData = $this->app->request->getPost("contentData");
          $contentType = $this->app->request->getPost("contentType");
          $contentFilter = $this->app->request->getPost("contentFilter") ?: null;

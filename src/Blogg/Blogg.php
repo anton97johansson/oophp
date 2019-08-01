@@ -120,12 +120,13 @@ EOD;
     {
         $sql = "SELECT slug, id FROM content;";
         $res = $app->db->executeFetchAll($sql);
+        $val = false;
         foreach ($res as $row) {
             if ($row->slug == $slug && $id != $row->id) {
-                return true;
+                $val = true;
             }
         }
-        return false;
+        return $val;
     }
 
     public function deleteContent($app, $id)
