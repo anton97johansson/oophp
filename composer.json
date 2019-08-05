@@ -9,7 +9,7 @@
             "Anax\\": "src/",
             "Anjj16\\": "src/"
         },
-        "files": ["src/function.php"],
+        "files": ["src/function.php"]
     },
     "require": {
         "anax/anax-oophp-me": "^2.0.0@beta",

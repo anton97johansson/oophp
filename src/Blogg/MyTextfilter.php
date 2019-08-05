@@ -11,9 +11,7 @@ use Michelf\MarkdownExtra;
 * @SuppressWarnings(PHPMD.UnusedLocalVariable)
 * @SuppressWarnings(PHPMD.StaticAccess)
 */
-/**
- * Filter and format text content.
- */
+
 class MyTextFilter
 {
     /**
@@ -38,31 +36,29 @@ class MyTextFilter
      * @return string with the formatted text.
      */
     public function parse($text, $filter)
-    {   $filter = explode(",", $filter);
-        foreach($filter as $aFilter) {
+    {
+        $filter = explode(",", $filter);
+        foreach ($filter as $aFilter) {
             if ($aFilter == "bbcode") {
                 $text = call_user_func_array(
-                                [$this, $this->filters["bbcode"]],
-                                [$text]
-                            );
-            }
-            elseif ($aFilter == "link") {
+                    [$this, $this->filters["bbcode"]],
+                    [$text]
+                );
+            } elseif ($aFilter == "link") {
                 $text = call_user_func_array(
-                                [$this, $this->filters["link"]],
-                                [$text]
-                            );
-            }
-            elseif ($aFilter == "markdown") {
+                    [$this, $this->filters["link"]],
+                    [$text]
+                );
+            } elseif ($aFilter == "markdown") {
                 $text = call_user_func_array(
-                                [$this, $this->filters["markdown"]],
-                                [$text]
-                            );
-            }
-            elseif ($aFilter == "nl2br") {
+                    [$this, $this->filters["markdown"]],
+                    [$text]
+                );
+            } elseif ($aFilter == "nl2br") {
                 $text = call_user_func_array(
-                                [$this, $this->filters["nl2br"]],
-                                [$text]
-                            );
+                    [$this, $this->filters["nl2br"]],
+                    [$text]
+                );
             }
         }
         return $text;
@@ -71,9 +67,9 @@ class MyTextFilter
     public function bbcode($text)
     {
         return $text = call_user_func_array(
-                        [$this, $this->filters["bbcode"]],
-                        [$text]
-                    );
+            [$this, $this->filters["bbcode"]],
+            [$text]
+        );
     }
 
 
@@ -93,8 +89,8 @@ class MyTextFilter
            '/\[img\](https?.*?)\[\/img\]/is',
            '/\[url\](https?.*?)\[\/url\]/is',
            '/\[url=(https?.*?)\](.*?)\[\/url\]/is'
-       ];
-       $replace = [
+        ];
+        $replace = [
            '<strong>$1</strong>',
            '<em>$1</em>',
            '<u>$1</u>',
@@ -119,9 +115,9 @@ class MyTextFilter
         return preg_replace_callback(
             '#\b(?<![href|src]=[\'"])https?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#',
             function ($matches) {
-                return "<a href=\'{$matches[0]}\'>{$matches[0]}</a>";
-        },
-      $text
+                return "<a href=\"{$matches[0]}\">{$matches[0]}</a>";
+            },
+            $text
         );
     }
 

@@ -1,5 +1,6 @@
 <?php
 namespace Anax\View;
+
 ?>
 
 <article>
@@ -7,5 +8,5 @@ namespace Anax\View;
         <h1><?= esc($content->title) ?></h1>
         <p><i>Published: <time datetime="<?= esc($content->published_iso8601) ?>" pubdate><?= esc($content->published) ?></time></i></p>
     </header>
-    <?= $filter->parse(esc($content->data), $content->filter); ?>
+    <?= $filter->parse($content->data, $content->filter); ?>
 </article>

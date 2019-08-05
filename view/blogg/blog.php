@@ -22,7 +22,7 @@ if (!$res) {
         </h1>
         <p><i>Published: <time datetime="<?= esc($row->published_iso8601) ?>" pubdate><?= esc($row->published) ?></time></i></p>
     </header>
-    <?= $filter->parse(esc($row->data), $row->filter); ?> 
+    <?= $filter->parse($row->data, $row->filter); ?> 
 </section>
 <?php endforeach; ?>
 

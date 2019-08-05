@@ -24,12 +24,12 @@ class BloggController implements AppInjectableInterface
 
 
 
-    public function initAction ()
+    public function initAction()
     {
         $this->app->db->connect();
         $this->app->session->set("blogg", new Blogg());
         $this->app->session->set("filter", new MyTextFilter());
-        return $this->app->response->redirect("blogg");
+        return $this->app->response->redirect("blogg/all");
     }
     /**
      * This is the index method action, it handles:
@@ -41,10 +41,14 @@ class BloggController implements AppInjectableInterface
      */
     public function indexAction()
     {
+         return $this->app->response->redirect("blogg/init");
+    }
+    public function allAction()
+    {
          $title = "blogg and posts";
          $this->app->db->connect();
-         $this->app->session->set("blogg", new Blogg());
-         $this->app->session->set("filter", new MyTextFilter());
+         // $this->app->session->set("blogg", new Blogg());
+         // $this->app->session->set("filter", new MyTextFilter());
          $blogg = $this->app->session->get("blogg");
          $data = [
              "res" => $blogg->getAll($this->app, "content"),
@@ -57,8 +61,9 @@ class BloggController implements AppInjectableInterface
          return $this->app->page->render([
              "title" => $title,
          ]);
-         return $this->app->response->redirect("blogg");
+         return $this->app->response->redirect("blogg/all");
     }
+
 
     public function pageAction()
     {
@@ -197,48 +202,28 @@ class BloggController implements AppInjectableInterface
          $blogg = $this->app->session->get("blogg");
          $content = $blogg->getContentByID($this->app, [$contentId]);
          $contentTitle = $this->app->request->getPost("contentTitle");
-         $contentPath  = $this->app->request->getPost("contentPath") ?: null;
-         $contentSlug = $this->app->request->getPost("contentSlug") ?: null;;
+         $contentSlug = $this->app->request->getPost("contentSlug") ?: null;
          $contentData = $this->app->request->getPost("contentData");
          $contentType = $this->app->request->getPost("contentType");
-         $contentFilter = $this->app->request->getPost("contentFilter") ?: null;
+         $contentPath  = $this->app->request->getPost("contentPath") ?: $contentType . "-" . $contentId;
+         $contentFilter = $this->app->request->getPost("contentFilter");
          $contentPublish = $this->app->request->getPost("contentPublish");
-         if (!$contentSlug && $contentType == "post") {
-             $contentSlug = $blogg->slugify($contentTitle);
-         }
-         if (!$contentPath) {
-             if ($contentType == "post") {
-                 $contentPath = "blogpost-".$contentId;
-             }
-             elseif ($contentType == "page") {
-                 $contentPath = "page-".$contentId;
-             }
-         }
+        if (!$contentSlug && $contentType == "post") {
+            $contentSlug = $blogg->slugify($contentTitle);
+        }
+         // if (!$contentPath) {
+         //     if ($contentType == "post") {
+         //         $contentPath = "blogpost-".$contentId;
+         //     }
+         //     elseif ($contentType == "page") {
+         //         $contentPath = "page-".$contentId;
+         //     }
+         // }
          $warning = "";
 
         if ((null !== $this->app->request->getPost("doSave"))) {
             $warning = "";
-            if ($contentType == "post") {
-                if ($blogg->controlSlug($this->app, $contentSlug,  $contentId)) {
-                    $warning = "Change slug, two cant have same name";
-                    // return $this->app->response->redirect("blogg/edit?contentId=".$contentId);
-                }
-                elseif (!$blogg->controlSlug($this->app, $contentSlug, $contentId) && $warning == "")
-                {
-                    $blogg->edit($this->app, [
-                        $contentTitle,
-                        $contentPath,
-                        $contentSlug,
-                        $contentData,
-                        $contentType,
-                        $contentFilter,
-                        $contentPublish,
-                        $contentId
-                    ]);
-                    return $this->app->response->redirect("blogg");
-                }
-            }
-            elseif ($contentType == "page" && $warning == "") {
+            if (!$blogg->controlSlug($this->app, $contentSlug, $contentId) && $warning == "") {
                 $blogg->edit($this->app, [
                     $contentTitle,
                     $contentPath,
@@ -251,6 +236,40 @@ class BloggController implements AppInjectableInterface
                 ]);
                 return $this->app->response->redirect("blogg");
             }
+            $warning = "Change slug, two cant have same name";
+                    // return $this->app->response->redirect("blogg/edit?contentId=".$contentId);
+                // elseif (!$blogg->controlSlug($this->app, $contentSlug, $contentId) && $warning == "")
+                // {
+                //     $blogg->edit($this->app, [
+                //         $contentTitle,
+                //         $contentPath,
+                //         $contentSlug,
+                //         $contentData,
+                //         $contentType,
+                //         $contentFilter,
+                //         $contentPublish,
+                //         $contentId
+                //     ]);
+                //     return $this->app->response->redirect("blogg");
+                // }
+                // if ($blogg->controlSlug($this->app, $contentSlug,  $contentId)) {
+                //     $warning = "Change slug, two cant have same name";
+                //     // return $this->app->response->redirect("blogg/edit?contentId=".$contentId);
+                // }
+
+            // elseif ($contentType == "page" && $warning == "") {
+            //     $blogg->edit($this->app, [
+            //         $contentTitle,
+            //         $contentPath,
+            //         $contentSlug,
+            //         $contentData,
+            //         $contentType,
+            //         $contentFilter,
+            //         $contentPublish,
+            //         $contentId
+            //     ]);
+            //     return $this->app->response->redirect("blogg");
+            // }
             // "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
         }
          $title = $content->title;

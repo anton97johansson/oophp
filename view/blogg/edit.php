@@ -1,5 +1,6 @@
 <?php
 namespace Anax\View;
+
 ?>
 
 <h1><b><?=$warning?></b></h1>

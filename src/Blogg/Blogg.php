@@ -1,7 +1,8 @@
 <?php
 namespace Anjj16\Blogg;
 
-class Blogg {
+class Blogg
+{
     public function getPages($app)
     {
         $sql = <<<EOD
@@ -27,12 +28,14 @@ EOD;
         return $res;
     }
 
-    public function saveContent($app, $params) {
+    public function saveContent($app, $params)
+    {
         $sql = "UPDATE content SET title=?, path=?, slug=?, data=?, type=?, filter=?, published=? WHERE id = ?;";
         $app->db->execute($sql, $params);
     }
 
-    public function getContent($app, $params) {
+    public function getContent($app, $params)
+    {
         $sql = <<<EOD
 SELECT
     *,
@@ -62,11 +65,12 @@ WHERE type=?
 ORDER BY published DESC
 EOD;
 
-    $res = $app->db->executeFetchAll($sql, $params);
-    return $res;
+        $res = $app->db->executeFetchAll($sql, $params);
+        return $res;
     }
 
-    public function getPost($app, $params) {
+    public function getPost($app, $params)
+    {
         $sql = <<<EOD
 SELECT
     *,
@@ -95,7 +99,7 @@ EOD;
         return $str;
     }
 
-    public  function getContentByID($app, $id)
+    public function getContentByID($app, $id)
     {
         $sql = "SELECT * FROM content WHERE id = ?;";
         $res = $app->db->executeFetchAll($sql, $id);
@@ -118,12 +122,14 @@ EOD;
 
     public function controlSlug($app, $slug, $id)
     {
-        $sql = "SELECT slug, id FROM content;";
-        $res = $app->db->executeFetchAll($sql);
         $val = false;
-        foreach ($res as $row) {
-            if ($row->slug == $slug && $id != $row->id) {
-                $val = true;
+        if ($slug != null) {
+            $sql = "SELECT slug, id FROM content;";
+            $res = $app->db->executeFetchAll($sql);
+            foreach ($res as $row) {
+                if ($row->slug == $slug && $id != $row->id) {
+                    $val = true;
+                }
             }
         }
         return $val;
